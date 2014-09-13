@@ -11,7 +11,7 @@ This is meant to be a temporary, disposable rsync storage. Do NOT use for backup
 
 Launch the container via docker:
 ```
-docker run -d -p 873 bfosberry/rsync
+docker run -d -p 873 -e "USERNAME:myuser" -e "PASSWORD:mypassword" bfosberry/rsync
 ```
 
 You can connect to rsync server inside a container like this:
