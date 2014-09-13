@@ -1,0 +1,23 @@
+#!/bin/bash
+ALLOW=${ALLOW:-192.168.0.0/16 172.16.0.0/12}
+
+DATA_PATH=/data
+mkdir -p $DATA_PATH
+chown nobody:nogroup "${DATA_PATH}"
+
+[ -f /etc/rsyncd.conf ] || cat <<EOF > /etc/rsyncd.conf
+uid = nobody
+gid = nogroup
+use chroot = yes
+pid file = /var/run/rsyncd.pid
+log file = /dev/stdout
+
+[data]
+    hosts deny = *
+    hosts allow = ${ALLOW}
+    read only = false
+    path = ${DATA_PATH}
+    comment = data directory
+EOF
+
+exec /usr/bin/rsync --no-detach --daemon --config /etc/rsyncd.conf "$@"
